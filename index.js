@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const app = require('express')();
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
@@ -16,9 +18,21 @@ mongoose.connect(process.env.mongo, { useNewUrlParser: true })
 		// }
 	});
 
+// bootstrap controllers to app
+const controllers = fs.readdirSync(path.resolve(__dirname, './controllers'));
+
+
+controllers.forEach(fileName => {
+	const route = '/' + fileName.replace('.js', '');
+	console.log({ fileName });
+	const _module = require(path.resolve(__dirname, './controllers/', fileName));
+	console.log({ route, module });
+	app.use(route, _module)
+});
+
 app.get('*', (req, res, next) => {
 
-	res.send('hello..');
+	res.send('What????');
 });
 
 app.listen(process.env.PORT, function() {
