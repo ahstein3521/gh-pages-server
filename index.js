@@ -24,15 +24,14 @@ const controllers = fs.readdirSync(path.resolve(__dirname, './controllers'));
 
 controllers.forEach(fileName => {
 	const route = '/' + fileName.replace('.js', '');
-	console.log({ fileName });
 	const _module = require(path.resolve(__dirname, './controllers/', fileName));
-	console.log({ route, module });
+
 	app.use(route, _module)
 });
 
 app.get('*', (req, res, next) => {
 
-	res.send('What????');
+	res.send('I don\'t know what you were hoping to find, but it\'s not here.');
 });
 
 app.listen(process.env.PORT, function() {

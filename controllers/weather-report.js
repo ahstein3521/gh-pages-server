@@ -1,15 +1,25 @@
 const router = require('express').Router();
 const http = require('http');
+const zipcodes = require('zipcodes');
 
-const ROOT_URL = 'http://api.openweathermap.org/data/2.5/weather';
 
 router.get('/:zipcode', (req, res, next) => {
-	const zipcode = req.params.zipcode;
-	const KEY = process.env.openWeather;
+	let route = 'http://api.openweathermap.org/data/2.5/weather';
+	route += '?appid=' + process.env.openWeather;
+	route += '&units=imperial';
 
-	http.get(`${ROOT_URL}?appid=${KEY}&units=imperial&zip=${zipcode}`, response => {
+	const location = zipcodes.lookup(req.params.zipcode);
 
-		 if (res.statusCode !== 200) {
+	if (!location) {
+		return res.error('Invalid zipcode');
+	}
+
+	route += '&lat=' + location.latitude;
+	route += '&lon=' + location.longitude;
+	// make openweather request
+	http.get(route, response => {
+
+		if (res.statusCode !== 200) {
 		 	response.resume();
 		 	res.send(response);
 		 }
@@ -18,7 +28,10 @@ router.get('/:zipcode', (req, res, next) => {
 
 		response.setEncoding('utf8');
 
-		response.on('data', d => utf8 += d);
+		response.on('data', d => {
+			console.log('chunk', d);
+			utf8 += d
+		});
 		
 		response.on('end', () => {
 			try {
@@ -27,6 +40,8 @@ router.get('/:zipcode', (req, res, next) => {
 				res.send(err);
 			}
 		});
+
+		
 
 	})	
 
