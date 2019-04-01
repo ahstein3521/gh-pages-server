@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const app = require('express')();
+const cors = require('cors');
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 
@@ -18,9 +19,10 @@ mongoose.connect(process.env.mongo, { useNewUrlParser: true })
 		// }
 	});
 
+app.all('*', cors());
+
 // bootstrap controllers to app
 const controllers = fs.readdirSync(path.resolve(__dirname, './controllers'));
-
 
 controllers.forEach(fileName => {
 	const route = '/' + fileName.replace('.js', '');
