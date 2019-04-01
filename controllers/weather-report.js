@@ -35,7 +35,10 @@ router.get('/:zipcode', (req, res, next) => {
 		
 		response.on('end', () => {
 			try {
-				res.send(JSON.parse(utf8))
+				const json = JSON.parse(utf8);
+				json.name = location.city + ', ' + location.state;
+				json.location = location;
+				res.send(json);
 			} catch (err) {
 				res.send(err);
 			}
