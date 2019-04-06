@@ -22,7 +22,10 @@ router.get('/:zipcode', (req, res, next) => {
 		if (response.statusCode !== 200) {
 		 	response.resume();
 		 	res.status = response.statusCode;
-		 	res.send(response);
+		 	res.send({
+		 		message: response,
+		 		status: response.statusCode
+		 	});
 		}
 
 		let utf8 = '';
