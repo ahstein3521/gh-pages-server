@@ -11,7 +11,7 @@ router.get('/:zipcode', (req, res, next) => {
 	const location = zipcodes.lookup(req.params.zipcode);
 
 	if (!location) {
-		return res.error('Invalid zipcode');
+		return res.status(404).send('Invalid U.S. zipcode');
 	}
 
 	route += '&lat=' + location.latitude;
@@ -21,11 +21,8 @@ router.get('/:zipcode', (req, res, next) => {
 
 		if (response.statusCode !== 200) {
 		 	response.resume();
-		 	res.status = response.statusCode;
-		 	res.send({
-		 		message: response,
-		 		status: response.statusCode
-		 	});
+		 	
+		 	res.sendStatus(response.statusCode);
 		}
 
 		let utf8 = '';
@@ -42,9 +39,9 @@ router.get('/:zipcode', (req, res, next) => {
 				const json = JSON.parse(utf8);
 				json.name = location.city + ', ' + location.state;
 				json.location = location;
-				res.send(json);
+				res.staus(200).send(json);
 			} catch (err) {
-				res.send(err);
+				res.status(500).send(err);
 			}
 		});
 

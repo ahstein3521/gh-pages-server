@@ -16,5 +16,8 @@
     "express": "^4.16.4",
     "mongoose": "^5.4.20",
     "zipcodes": "^8.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
   }
 }
