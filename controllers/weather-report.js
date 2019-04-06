@@ -19,10 +19,11 @@ router.get('/:zipcode', (req, res, next) => {
 	// make openweather request
 	http.get(route, response => {
 
-		if (res.statusCode !== 200) {
+		if (response.statusCode !== 200) {
 		 	response.resume();
+		 	res.status = response.statusCode;
 		 	res.send(response);
-		 }
+		}
 
 		let utf8 = '';
 
