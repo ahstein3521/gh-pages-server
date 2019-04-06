@@ -29,17 +29,14 @@ router.get('/:zipcode', (req, res, next) => {
 
 		response.setEncoding('utf8');
 
-		response.on('data', d => {
-			console.log('chunk', d);
-			utf8 += d
-		});
+		response.on('data', d => utf8 += d);
 		
 		response.on('end', () => {
 			try {
 				const json = JSON.parse(utf8);
 				json.name = location.city + ', ' + location.state;
 				json.location = location;
-				res.staus(200).send(json);
+				res.send(json);
 			} catch (err) {
 				res.status(500).send(err);
 			}
